@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <relativePath/>
+    <version>3.0.3</version>
+  </parent>
+
+  <groupId>io.github.aj8gh</groupId>
+  <artifactId>bot-chat</artifactId>
+  <name>${project.artifactId}</name>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>coverage</module>
+    <module>application</module>
+  </modules>
+
+  <properties>
+    <!-- Project -->
+    <java.version>17</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>${project.build.sourceEncoding}
+    </project.reporting.outputEncoding>
+
+    <!-- Jar -->
+    <default.package>botchat</default.package>
+    <start.class>Application</start.class>
+    <main.class>${project.groupId}.${default.package}.${start.class}</main.class>
+    <final.name>${project.artifactId}</final.name>
+    <final.name.sb>${project.artifactId}-sb</final.name.sb>
+
+    <!-- Checkstyle -->
+    <checkstyle.config.location>checkstyle.xml</checkstyle.config.location>
+    <checkstyle.suppressions.location>suppressions.xml</checkstyle.suppressions.location>
+    <checkstyle.phase>validate</checkstyle.phase>
+
+    <!-- Jacoco -->
+    <jacoco.phase>test</jacoco.phase>
+    <jacoco.ratio.target>0.80</jacoco.ratio.target>
+    <jacoco.class.target>0</jacoco.class.target>
+
+    <!-- Versions -->
+    <assertj.version>3.24.2</assertj.version>
+    <awaitility.version>4.2.0</awaitility.version>
+    <checkstyle.version>0.0.3</checkstyle.version>
+    <jacoco.version>0.8.8</jacoco.version>
+    <jackson.version>2.14.2</jackson.version>
+    <junit.version>5.9.2</junit.version>
+    <log4j.version>2.20.0</log4j.version>
+    <lombok.version>1.18.26</lombok.version>
+    <maven.assembly.version>3.5.0</maven.assembly.version>
+    <maven.checkstyle.version>3.2.1</maven.checkstyle.version>
+    <maven.enforcer.version>3.2.1</maven.enforcer.version>
+    <maven.surefire.version>3.0.0-M9</maven.surefire.version>
+    <mockito.version>5.1.1</mockito.version>
+    <slf4j.version>2.0.6</slf4j.version>
+    <springboot.version>3.0.3</springboot.version>
+    <wiremock.version>2.27.2</wiremock.version>
+  </properties>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>github</id>
+      <name>GitHub AJ8GH Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/aj8gh/checkstyle</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <profiles>
+    <profile>
+      <id>docker</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>checkstyle</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>${maven.assembly.version}</version>
+          <configuration>
+            <finalName>${final.name}</finalName>
+            <appendAssemblyId>false</appendAssemblyId>
+            <descriptorRefs>
+              <descriptorRef>jar-with-dependencies</descriptorRef>
+            </descriptorRefs>
+            <archive>
+              <index>true</index>
+              <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                <addClasspath>true</addClasspath>
+                <mainClass>${main.class}</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
+          <executions>
+            <execution>
+              <id>make-assembly</id>
+              <phase>package</phase>
+              <goals>
+                <goal>single</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${springboot.version}</version>
+          <executions>
+            <execution>
+              <id>repackage</id>
+              <phase>package</phase>
+              <goals>
+                <goal>repackage</goal>
+              </goals>
+              <configuration>
+                <mainClass>${main.class}</mainClass>
+                <executable>true</executable>
+                <finalName>${final.name.sb}</finalName>
+              </configuration>
+            </execution>
+          </executions>
+          <configuration>
+            <excludes>
+              <exclude>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>coverage</artifactId>
+              </exclude>
+            </excludes>
+            <mainClass>${main.class}</mainClass>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven.surefire.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco.version}</version>
+          <executions>
+            <execution>
+              <id>default-prepare-agent</id>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>report</id>
+              <phase>${jacoco.phase}</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>jacoco-check</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <rule>
+                    <element>BUNDLE</element>
+                    <limits>
+                      <limit>
+                        <counter>INSTRUCTION</counter>
+                        <value>COVEREDRATIO</value>
+                        <minimum>${jacoco.ratio.target}</minimum>
+                      </limit>
+                      <limit>
+                        <counter>CLASS</counter>
+                        <value>MISSEDCOUNT</value>
+                        <maximum>${jacoco.class.target}</maximum>
+                      </limit>
+                    </limits>
+                  </rule>
+                </rules>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>${maven.enforcer.version}</version>
+          <executions>
+            <execution>
+              <id>enforce-versions</id>
+              <goals>
+                <goal>enforce</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <bannedDependencies>
+                    <searchTransitive>true</searchTransitive>
+                    <excludes>
+                      <exclude>org.apache.logging.log4j:*:(,2.17.1]</exclude>
+                    </excludes>
+                  </bannedDependencies>
+                  <dependencyConvergence/>
+                  <banDuplicatePomDependencyVersions/>
+                  <requireJavaVersion>
+                    <version>[17,)</version>
+                  </requireJavaVersion>
+                </rules>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>${maven.checkstyle.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>${checkstyle.version}</version>
+            </dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <id>checkstyle</id>
+              <phase>${checkstyle.phase}</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- Project -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>application</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- Spring -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>${springboot.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <!-- Util -->
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.dataformat</groupId>
+        <artifactId>jackson-dataformat-yaml</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+
+      <!-- Test -->
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>${awaitility.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.github.tomakehurst</groupId>
+        <artifactId>wiremock</artifactId>
+        <version>${wiremock.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>${springboot.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+  </dependencies>
+</project>
