@@ -20,6 +20,7 @@
   <modules>
     <module>coverage</module>
     <module>application</module>
+    <module>component-test</module>
   </modules>
 
   <properties>
@@ -52,9 +53,11 @@
     <assertj.version>3.24.2</assertj.version>
     <awaitility.version>4.2.0</awaitility.version>
     <checkstyle.version>0.0.3</checkstyle.version>
+    <cucumber.version>7.11.1</cucumber.version>
     <jacoco.version>0.8.8</jacoco.version>
     <jackson.version>2.14.2</jackson.version>
-    <junit.version>5.9.2</junit.version>
+    <junit.platform.version>1.9.2</junit.platform.version>
+    <junit.jupiter.version>5.9.2</junit.jupiter.version>
     <log4j.version>2.20.0</log4j.version>
     <lombok.version>1.18.26</lombok.version>
     <maven.assembly.version>3.5.0</maven.assembly.version>
@@ -163,6 +166,13 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${maven.surefire.version}</version>
+          <configuration>
+            <properties>
+              <configurationParameters>
+                cucumber.junit-platform.naming-strategy=long
+              </configurationParameters>
+            </properties>
+          </configuration>
         </plugin>
 
         <plugin>
@@ -328,7 +338,13 @@
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
-        <version>${junit.version}</version>
+        <version>${junit.jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-suite</artifactId>
+        <version>${junit.platform.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -353,6 +369,18 @@
         <groupId>com.github.tomakehurst</groupId>
         <artifactId>wiremock</artifactId>
         <version>${wiremock.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.cucumber</groupId>
+        <artifactId>cucumber-java8</artifactId>
+        <version>${cucumber.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.cucumber</groupId>
+        <artifactId>cucumber-junit-platform-engine</artifactId>
+        <version>${cucumber.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
