@@ -55,12 +55,12 @@
     <checkstyle.version>0.0.3</checkstyle.version>
     <cucumber.version>7.15.0</cucumber.version>
     <jacoco.version>0.8.11</jacoco.version>
-    <jackson.version>2.16.1</jackson.version>
+    <jackson.version>2.16.2</jackson.version>
     <junit.platform.version>1.10.2</junit.platform.version>
     <junit.jupiter.version>5.10.2</junit.jupiter.version>
     <log4j.version>2.20.0</log4j.version>
     <lombok.version>1.18.30</lombok.version>
-    <maven.assembly.version>3.6.0</maven.assembly.version>
+    <maven.assembly.version>3.7.0</maven.assembly.version>
     <maven.checkstyle.version>3.3.1</maven.checkstyle.version>
     <maven.enforcer.version>3.4.1</maven.enforcer.version>
     <maven.surefire.version>3.2.5</maven.surefire.version>
