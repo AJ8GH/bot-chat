@@ -51,7 +51,7 @@
 
     <!-- Versions -->
     <assertj.version>3.25.3</assertj.version>
-    <awaitility.version>4.2.0</awaitility.version>
+    <awaitility.version>4.2.1</awaitility.version>
     <checkstyle.version>0.0.3</checkstyle.version>
     <cucumber.version>7.15.0</cucumber.version>
     <jacoco.version>0.8.11</jacoco.version>
